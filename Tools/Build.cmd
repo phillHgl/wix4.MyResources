@@ -17,7 +17,7 @@ if not exist "%_msbuild%" (
   goto :errMBS
 )
 
-call "%_msbuild%" ..\..\wix4\Wix.proj /t:Rebuild /p:PlatformToolset=v120_xp  /p:DebugSymbols=true /p:DebugType=full /p:Optimize=false /v:diag /l:FileLogger,Microsoft.Build.Engine;logfile="%~dp0\wix4.log"
+call "%_msbuild%" ..\..\wix4\Wix.proj /t:Rebuild /p:DebugSymbols=true /p:DebugType=full /p:Optimize=false /v:diag /l:FileLogger,Microsoft.Build.Engine;logfile="%~dp0\wix4.log"
 if errorlevel 1 goto :errBuild
 @echo 
 

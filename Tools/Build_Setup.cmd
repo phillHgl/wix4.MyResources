@@ -12,7 +12,8 @@ if not exist "%_msbuild%" (
   goto :errMBS
 )
 
-call "%_msbuild%" ..\..\wix4\src\Setup\Setup.proj /m:1 /p:PlatformToolset=v120_xp /p:DebugSymbols=true /p:DebugType=full /p:Optimize=false /v:normal /l:FileLogger,Microsoft.Build.Engine;logfile="%~dp0\Setup.log"
+::/p:PlatformToolset=v120_xp 
+call "%_msbuild%" ..\..\wix4\src\Setup\Setup.proj /m:1 /p:DebugSymbols=true /p:DebugType=full /p:Optimize=false /v:normal /l:FileLogger,Microsoft.Build.Engine;logfile="%~dp0\Setup.log"
 if errorlevel 1 goto :errBuild
 
 ::success
