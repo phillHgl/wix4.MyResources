@@ -5,7 +5,6 @@ setlocal EnableDelayedExpansion
 :: Copy this 'template' file to the parent folder, of the wix4 repository.
 :: Rename this file removing the .TEMPLATE
 :: Launch this script once using an admin context, to configure a build, for which derivatives target the local system.
-:: Or create a shortcut to this file and pass in ??? to configure a build, for which derivatives may target other systems.
 
 set _msbuild=%ProgramFiles(x86)%\MSBuild\14.0\Bin\msbuild.exe
 if [_msbuild]==[] (
@@ -18,7 +17,7 @@ if not exist "%_msbuild%" (
 net session >nul 2>&1
 if errorlevel 1 goto :errAdmin
 
-call "%_msbuild%" %~dp0\wix4\tools\OneTimeWixBuildInitialization.proj /l:FileLogger,Microsoft.Build.Engine;logfile=wix4_init.log
+call "%_msbuild%" %~dp0wix4\tools\OneTimeWixBuildInitialization.proj /l:FileLogger,Microsoft.Build.Engine;logfile=wix4_init.log
 if errorlevel 1 goto :errBuild
 
 ::success
