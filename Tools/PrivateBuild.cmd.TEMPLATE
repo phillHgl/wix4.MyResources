@@ -12,7 +12,8 @@ mode con: cols=210 lines=70
 :: Copy this 'template' file to the parent folder, of the wix4 repository.
 :: Rename these files removing the .TEMPLATE
 :: Replace [TEMPLATE_FULL_PATH_TO_STRONG_NAME_PAIR] with the full path to the strong name key pair file.
-:: The .snk file can be generated using the 'Build Wix' documentation 
+:: The wix.snk file can be generated using Build_PrivateWixSnk.cmd.TEMPLATE
+:: If necessary modify the votive2010....Assembly.cs file.
  
 :: When VS2015 is installed, must used MSBuild v14
 set _msbuild=%ProgramFiles(x86)%\MSBuild\14.0\Bin\msbuild.exe
