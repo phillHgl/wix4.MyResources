@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright (c) .NET Foundation and contributors. All rights reserved. Licensed under the Microsoft Reciprocal License. See LICENSE.TXT file in the project root for full license information. -->
+<!-- Originaaly from wix4/tools/OneTimeWixBuildInitialization.proj and modified to simplify the instructions at:
+     http://wixtoolset.org/development/building-wix/ -->
+  <!--
+  ================================================================================================
+  GenerateStrongNameKeys
+
+    Generates a Strong Name Key Pair for use in an Official Unofficial private build.
+  ================================================================================================
+  -->
+<!-- INSTRUCTIONS 
+     When this file is found in my 'Tools' folder, and the file name includes the extension .TEMPLATE 
+     follow the detailed instructions in the script file: Build_PrivateWixSnk.cmd.TEMPLATE -->
+
+<Project DefaultTargets="GenerateWixSnk" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="wix4\tools\WixBuild.props" />
+
+  <PropertyGroup>
+    <NetfxSdkInstallPath>$([MSBuild]::GetRegistryValueFromView('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v10.0A', 'InstallationFolder', null, RegistryView.Registry64, RegistryView.Registry32))</NetfxSdkInstallPath>
+    <NetfxSdkInstallPath Condition=" '$(NetfxSdkInstallPath)'=='' ">$([MSBuild]::GetRegistryValueFromView('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v8.1A', 'InstallationFolder', null, RegistryView.Registry64, RegistryView.Registry32))</NetfxSdkInstallPath>
+    <NetfxSdkInstallPath Condition=" '$(NetfxSdkInstallPath)'=='' ">$([MSBuild]::GetRegistryValueFromView('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v8.0A', 'InstallationFolder', null, RegistryView.Registry64, RegistryView.Registry32))</NetfxSdkInstallPath>
+    <NetfxSdkInstallPath Condition=" '$(NetfxSdkInstallPath)'=='' ">$([MSBuild]::GetRegistryValueFromView('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.0A', 'InstallationFolder', null, RegistryView.Registry64, RegistryView.Registry32))</NetfxSdkInstallPath>
+    <NetfxSdkInstallPath Condition=" !HasTrailingSlash('$(NetfxSdkInstallPath)') ">$(NetfxSdkInstallPath)\</NetfxSdkInstallPath>
+    <StrongNameSignFolder Condition=" Exists('$(NetfxSdkInstallPath)bin\NETFX 4.6 Tools\sn.exe') ">$(NetfxSdkInstallPath)bin\NETFX 4.6 Tools\</StrongNameSignFolder>
+    <StrongNameSignFolder Condition=" Exists('$(NetfxSdkInstallPath)bin\NETFX 4.5.1 Tools\sn.exe') ">$(NetfxSdkInstallPath)bin\NETFX 4.5.1 Tools\</StrongNameSignFolder>
+    <StrongNameSignFolder Condition=" Exists('$(NetfxSdkInstallPath)bin\NETFX 4.0 Tools\sn.exe') ">$(NetfxSdkInstallPath)bin\NETFX 4.0 Tools\</StrongNameSignFolder>
+    <StrongNameSignFolder Condition=" '$(StrongNameSignFolder)'=='' ">$(NetfxSdkInstallPath)bin\</StrongNameSignFolder>
+  </PropertyGroup>
+  <Target
+    Name="GenerateWixSnk">
+
+    <Error Text="Could not find sn.exe. Expected to find it at: $(StrongNameSignFolder)sn.exe" Condition=" !Exists('$(StrongNameSignFolder)sn.exe') " />
+    <Exec Command="&quot;$(StrongNameSignFolder)sn.exe&quot; -q -k wix.snk" />
+    <Exec Command="&quot;$(StrongNameSignFolder)sn.exe&quot; -q -p wix.snk wix.pub" />
+    <Exec Command="&quot;$(StrongNameSignFolder)sn.exe&quot; -q -tp wix.pub" />
+  </Target>
+
+</Project>

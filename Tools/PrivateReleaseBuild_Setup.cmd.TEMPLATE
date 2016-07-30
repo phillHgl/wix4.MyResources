@@ -1,0 +1,37 @@
+@echo off
+setlocal
+:set the window size
+mode con: cols=210 lines=70
+
+:: INSTRUCTIONS - ASSUME the full wix4.proj has built succesfuly - see PrivateBuild_Setup.cmd.TEMPLATE for more details
+:: Copy this 'template' file to the parent folder, of the wix4 repository.
+:: Rename these files removing the .TEMPLATE
+:: Replace [TEMPLATE_FULL_PATH_TO_STRONG_NAME_PAIR] with the full path to the strong name key pair file.
+:: The wix.snk file can be generated using Build_PrivateWixSnk.cmd.TEMPLATE
+:: If necessary modify the votive2010....Assembly.cs file.
+
+set _msbuild=%ProgramFiles(x86)%\MSBuild\14.0\Bin\msbuild.exe
+if [_msbuild]==[] (
+  goto :errMBS
+)
+
+if not exist "%_msbuild%" (
+  goto :errMBS
+)
+
+call "%_msbuild%" %~dp0wix4\src\Setup\Setup.proj /m:1 /p:OFFICIAL_WIX_BUILD=[TEMPLATE_FULL_PATH_TO_STRONG_NAME_PAIR]wix.snk /p:Configuration='Release'  /v:diag /l:FileLogger,Microsoft.Build.Engine;logfile="%~dp0Setup.log"
+if errorlevel 1 goto :errBuild
+
+::success
+exit /b 0
+
+:errBuild
+@echo MSBuild returned an error.  Please review the log file.
+pause
+exit 2
+:errMBS
+@echo MSBuild was not located.  This script will exit.
+pause
+exit 1
+
+::endlocal implied
